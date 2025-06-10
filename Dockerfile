@@ -1,14 +1,18 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim-buster
+# Use an official Anaconda runtime as a parent image
+FROM continuumio/miniconda3:latest
 
 # Set the working directory to /app
 WORKDIR /app
 
-# Copy the requirements file into the container at /app
-COPY requirements.txt .
+# Copy the environment.yml file into the container
+COPY environment.yml .
 
-# Install the required packages
-RUN pip install --no-cache-dir -r requirements.txt
+# Create the conda environment from the environment.yml file
+RUN conda env create -f environment.yml
+
+# Activate the environment and ensure it is used by default
+RUN echo "conda activate base" >> ~/.bashrc
+ENV PATH /opt/conda/envs/base/bin:$PATH
 
 # Copy the current directory contents into the container at /app
 COPY . /app
@@ -18,4 +22,3 @@ EXPOSE 3000
 
 # Start the FastAPI app using uvicorn
 CMD ["python", "app.py"]
-
