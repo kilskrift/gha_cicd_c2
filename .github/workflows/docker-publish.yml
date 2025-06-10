@@ -25,10 +25,13 @@ env:
 jobs:
   integration:
     uses: kilskrift/gha_cicd_c2_action/.github/workflows/python-package-conda.yml@main
+    permissions:
+      contents: read
+      checks: write
 
   build:
     needs: integration
-    
+
     runs-on: ubuntu-latest
     permissions:
       contents: read
